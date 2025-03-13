@@ -1,0 +1,31 @@
+delta Cornering {	
+
+	modifies jab.module.Movement {
+	
+		adds import robocode.Event;
+		adds import robocode.HitWallEvent;
+		adds import jab.module.Module;
+	
+		adds private int turnRightValue;
+		
+		modifies constructor(Module bot) {
+			this.bot = bot;
+			turnRightValue = 45;
+		}
+	
+		modifies move() {
+			// Limit our speed to 5
+			bot.setMaxVelocity(8);
+			// Start moving (and turning)
+			bot.setAhead(10000);
+		}
+		
+		adds public void listen(Event e) {
+			if (e instanceof HitWallEvent) {
+				bot.setTurnRight(turnRightValue);
+			}
+		}
+		
+	}
+
+}
