@@ -1,7 +1,7 @@
 <project name="RobocodeSPL" default="copyJarToTester">    
 	
   <property name="projectHome" location="../." />
-  <property name="testerHome" location="../../ModuleRobocodeFramework/ModuleTester" />
+  <property name="testerHome" location="../../../ModuleRobocodeFramework/ModuleTester" />
   <property name="ROBOCODE_HOME" value="${projectHome}\robocode\libs"/>
   <property name="CLASSPATH" value="./classes;${ROBOCODE_HOME}/robocode.jar"/>
 	
