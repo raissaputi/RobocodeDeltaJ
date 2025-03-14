@@ -1,2 +1,37 @@
 delta MouseClickGun {
+
+	modifies jab.module.Gun {
+
+		adds import java.awt.event.MouseEvent;
+		adds import java.awt.event.MouseListener;
+		adds import robocode.Event;
+		adds import jab.module.Module;
+
+		adds private boolean fireRequested;
+
+		modifies constructor(Module bot) {
+			this.bot = bot;
+			fireRequested = false;
+		}
+
+		adds public void listen(Event e) {
+			if (e instanceof MouseEvent) {
+				MouseEvent mouseEvent = (MouseEvent) e;
+				if (mouseEvent.getID() == MouseEvent.MOUSE_CLICKED) {
+					handleMouseClick(mouseEvent);
+				}
+			}
+		}
+
+		adds private void handleMouseClick(MouseEvent e) {
+			fireRequested = true;
+		}
+
+		modifies fire() {
+			if (fireRequested) {
+				bot.setFire(1); // Fire with power 1
+				fireRequested = false;
+			}
+		}
+	}
 }
