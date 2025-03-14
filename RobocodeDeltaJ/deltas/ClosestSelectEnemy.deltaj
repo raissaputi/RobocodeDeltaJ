@@ -1,2 +1,35 @@
 delta ClosestSelectEnemy {
+
+	modifies jab.module.SelectEnemy {
+
+		adds import robocode.ScannedRobotEvent;
+		adds import robocode.Event;
+		adds import jab.module.Module;
+
+		adds private double closestDistance;
+		adds private String closestEnemy;
+
+		modifies constructor(Module bot) {
+			this.bot = bot;
+			closestDistance = Double.MAX_VALUE;
+			closestEnemy = null;
+		}
+
+		adds public void listen(Event e) {
+			if (e instanceof ScannedRobotEvent) {
+				ScannedRobotEvent scannedEvent = (ScannedRobotEvent) e;
+				double distance = scannedEvent.getDistance();
+				if (distance < closestDistance) {
+					closestDistance = distance;
+					closestEnemy = scannedEvent.getName();
+				}
+			}
+		}
+
+		modifies select() {
+			if (closestEnemy != null) {
+				bot.setTarget(closestEnemy);
+			}
+		}
+	}
 }
