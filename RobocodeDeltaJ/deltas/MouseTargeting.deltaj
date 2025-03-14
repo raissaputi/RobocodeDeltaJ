@@ -1,2 +1,38 @@
 delta MouseTargeting {
+
+	modifies jab.module.Targeting {
+
+		adds import java.awt.event.MouseEvent;
+		adds import java.awt.event.MouseListener;
+		adds import robocode.Event;
+		adds import jab.module.Module;
+
+		adds private double targetX, targetY;
+
+		modifies constructor(Module bot) {
+			this.bot = bot;
+			targetX = 0;
+			targetY = 0;
+		}
+
+		adds public void listen(Event e) {
+			if (e instanceof MouseEvent) {
+				MouseEvent mouseEvent = (MouseEvent) e;
+				if (mouseEvent.getID() == MouseEvent.MOUSE_MOVED) {
+					handleMouseMoved(mouseEvent);
+				}
+			}
+		}
+
+		adds private void handleMouseMoved(MouseEvent e) {
+			targetX = e.getX();
+			targetY = e.getY();
+		}
+
+		modifies target() {
+			double angleToTarget = Math.atan2(targetY - bot.getY(), targetX - bot.getX());
+			double turnGunAngle = robocode.util.Utils.normalRelativeAngle(angleToTarget - bot.getGunHeadingRadians());
+			bot.setTurnGunRightRadians(turnGunAngle);
+		}
+	}
 }
