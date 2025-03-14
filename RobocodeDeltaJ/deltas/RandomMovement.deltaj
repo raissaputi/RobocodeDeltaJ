@@ -1,2 +1,39 @@
-delta RandomMovement {
+delta RandomMovement {	
+
+	modifies jab.module.Movement {
+	
+		adds import robocode.Event;
+		adds import robocode.HitWallEvent;
+		adds import jab.module.Module;
+		adds import java.util.Random;
+	
+		adds private int moveDirection;
+		adds private Random random;
+		
+		modifies constructor(Module bot) {
+			this.bot = bot;
+			this.random = new Random();
+			this.moveDirection = 1;
+		}
+	
+		modifies move() {
+			bot.setMaxVelocity(8);
+			
+			double randomDistance = 50 + (random.nextDouble() * 200);
+			
+			double randomTurn = -90 + (random.nextDouble() * 180);
+			
+			bot.setAhead(randomDistance * moveDirection);
+			bot.setTurnRight(randomTurn);
+		}
+		
+		adds public void listen(Event e) {
+			if (e instanceof HitWallEvent) {
+				moveDirection *= -1;
+				bot.setTurnRight(random.nextInt(180) - 90);
+			}
+		}
+		
+	}
+
 }
