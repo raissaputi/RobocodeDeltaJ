@@ -1,13 +1,13 @@
 <project name="RobocodeSPL" default="copyJarToTester">    
 	
-  <property name="projectHome" location="../." />
-  <property name="testerHome" location="../../ModuleTester" />
+  <property name="projectHome" location="D:\Alin\SPLE\RobocodeDeltaJ\RoboRobo" />
+  <property name="testerHome" location="D:\Alin\SPLE\ModuleRobocodeFramework\ModuleTester" />
   <property name="ROBOCODE_HOME" value="${projectHome}\robocode\libs"/>
   <property name="CLASSPATH" value="./classes;${ROBOCODE_HOME}/robocode.jar"/>
 	
   <target name="createjar">
   	<delete file="${projectHome}/build/jab.ModuleBot_1.jar"/>
-  	<javac srcdir="${projectHome}/src" destdir="${projectHome}/bin" classpath="${CLASSPATH}" debug="${COMPILE_WITH_DEBUG}" includes="**/*.java"/>
+  	<javac srcdir="D:\Alin\SPLE\RobocodeDeltaJ\RoboRobo\src" destdir="D:\Alin\SPLE\RobocodeDeltaJ\RobocodeDeltaJ\bin" classpath="${CLASSPATH}" debug="${COMPILE_WITH_DEBUG}" includes="**/*.java"/>
     <jar destfile="${projectHome}/build/jab.ModuleBot_1.jar" basedir="${projectHome}/bin" />
   	<jar destfile="${projectHome}/build/jab.ModuleTeam_1.jar" basedir="${projectHome}/bin" />
   	<available file="${testerHome}" property="tester.present"/>

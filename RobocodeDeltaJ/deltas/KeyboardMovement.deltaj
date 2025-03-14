@@ -2,80 +2,59 @@ delta KeyboardMovement {
 
 	modifies jab.module.Movement {
 
+		adds import java.awt.event.InputEvent;
 		adds import java.awt.event.KeyEvent;
-		adds import java.awt.event.KeyListener;
-		adds import robocode.Event;
 		adds import jab.module.Module;
 
-		adds private boolean upPressed, downPressed, leftPressed, rightPressed;
+		adds private int moveDirection;
+		adds private int turnDirection;
+		adds private double moveAmount;
 
 		modifies constructor(Module bot) {
 			this.bot = bot;
-			upPressed = false;
-			downPressed = false;
-			leftPressed = false;
-			rightPressed = false;
-		}
-
-		adds public void listen(Event e) {
-			if (e instanceof KeyEvent) {
-				KeyEvent keyEvent = (KeyEvent) e;
-				switch (keyEvent.getID()) {
-					case KeyEvent.KEY_PRESSED:
-						handleKeyPressed(keyEvent);
-						break;
-					case KeyEvent.KEY_RELEASED:
-						handleKeyReleased(keyEvent);
-						break;
-				}
-			}
-		}
-
-		adds private void handleKeyPressed(KeyEvent e) {
-			switch (e.getKeyCode()) {
-				case KeyEvent.VK_UP:
-					upPressed = true;
-					break;
-				case KeyEvent.VK_DOWN:
-					downPressed = true;
-					break;
-				case KeyEvent.VK_LEFT:
-					leftPressed = true;
-					break;
-				case KeyEvent.VK_RIGHT:
-					rightPressed = true;
-					break;
-			}
-		}
-
-		adds private void handleKeyReleased(KeyEvent e) {
-			switch (e.getKeyCode()) {
-				case KeyEvent.VK_UP:
-					upPressed = false;
-					break;
-				case KeyEvent.VK_DOWN:
-					downPressed = false;
-					break;
-				case KeyEvent.VK_LEFT:
-					leftPressed = false;
-					break;
-				case KeyEvent.VK_RIGHT:
-					rightPressed = false;
-					break;
-			}
+			moveDirection = 0;
+			turnDirection = 0;
+			moveAmount = 0;
 		}
 
 		modifies move() {
-			bot.setMaxVelocity(8);
-			if (upPressed) {
-				bot.setAhead(100);
-			} else if (downPressed) {
-				bot.setBack(100);
-			}
-			if (leftPressed) {
-				bot.setTurnLeft(10);
-			} else if (rightPressed) {
-				bot.setTurnRight(10);
+			bot.setAhead(moveAmount * moveDirection);
+			moveAmount = Math.max(0, moveAmount - 1);
+			bot.setTurnRight(45 * turnDirection);
+		}
+
+		adds public void listenInput(InputEvent e) {
+			if (e instanceof KeyEvent) {
+				KeyEvent keyEvent = (KeyEvent) e;
+				if (keyEvent.getID() == KeyEvent.KEY_PRESSED) {
+					switch (keyEvent.getKeyCode()) {
+					case KeyEvent.VK_UP:
+						moveDirection = 1;
+						moveAmount = Double.POSITIVE_INFINITY;
+						break;
+					case KeyEvent.VK_DOWN:
+						moveDirection = -1;
+						moveAmount = Double.POSITIVE_INFINITY;
+						break;
+					case KeyEvent.VK_RIGHT:
+						turnDirection = 1;
+						break;
+					case KeyEvent.VK_LEFT:
+						turnDirection = -1;
+						break;
+					}
+				} else if (keyEvent.getID() == KeyEvent.KEY_RELEASED) {
+					switch (keyEvent.getKeyCode()) {
+					case KeyEvent.VK_UP:
+					case KeyEvent.VK_DOWN:
+						moveDirection = 0;
+						break;
+					case KeyEvent.VK_RIGHT:
+					case KeyEvent.VK_LEFT:
+						turnDirection = 0;
+						break;
+					}
+				}
 			}
 		}
 	}
