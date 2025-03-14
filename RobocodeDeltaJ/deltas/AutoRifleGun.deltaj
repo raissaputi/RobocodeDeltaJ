@@ -1,2 +1,75 @@
-delta AutoRifleGun{
+delta AutoRifleGun {
+    modifies jab.module.Gun {
+        adds import jab.module.Module;
+        adds import robocode.Rules;
+        adds import robocode.Bullet;
+        adds import java.util.Random;
+        
+        adds private boolean rifleMode = true;
+        adds private int burstCount = 0;
+        adds private int maxBurstCount = 3;
+        adds private double cooldownTime = 2.0;
+        adds private long lastBurstTime = 0;
+        adds private Random random = new Random();
+        
+        modifies constructor(Module bot) {
+            this.bot = bot;
+        }
+        
+        modifies fire() {
+            if (bot.enemy == null) return;
+            
+            long currentTime = System.currentTimeMillis();
+            boolean cooledDown = (currentTime - lastBurstTime) > (cooldownTime * 1000);
+            
+            // Check if we're in a burst or if we've cooled down enough to start a new burst
+            if (burstCount > 0 || cooledDown) {
+                // Calculate bullet power - smaller bullets for rapid fire
+                double bulletPower = 1.0;
+                
+                // Don't waste bullets on dead robots
+                if (bot.enemy.energy == 0) {
+                    burstCount = 0;
+                    return;
+                }
+                
+                // Fire if gun is ready
+                if (bot.getGunHeat() == 0) {
+                    // Add slight randomness to simulate recoil
+                    double randomOffset = (random.nextDouble() - 0.5) * 0.05;
+                    bot.setTurnGunRight(randomOffset);
+                    
+                    // Fire bullet
+                    Bullet b = bot.setFireBullet(bulletPower);
+                    bot.registerBullet(b);
+                    
+                    // Manage burst
+                    if (burstCount == 0) {
+                        // Start of new burst
+                        burstCount = maxBurstCount;
+                        lastBurstTime = currentTime;
+                    }
+                    
+                    burstCount--;
+                }
+            }
+        }
+        
+        adds public void toggleRifleMode() {
+            rifleMode = !rifleMode;
+            burstCount = 0;
+        }
+        
+        adds public void setBurstSize(int size) {
+            if (size > 0 && size <= 10) {
+                maxBurstCount = size;
+            }
+        }
+        
+        adds public void setCooldownTime(double seconds) {
+            if (seconds >= 0.5 && seconds <= 5.0) {
+                cooldownTime = seconds;
+            }
+        }
+    }
 }
