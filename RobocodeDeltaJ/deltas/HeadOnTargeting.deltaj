@@ -1,2 +1,17 @@
 delta HeadOnTargeting {
+    modifies jab.module.Targeting{
+        adds import jab.module.Module;
+        adds import robocode.util.Utils;
+        
+        modifies constructor(Module bot) {
+ 			this.bot = bot;
+ 		}
+
+        modifies target() {
+            if (bot.enemy != null) {
+                double absoluteBearing = bot.getHeadingRadians() + bot.enemy.bearingRadians;
+                bot.setTurnGunRightRadians(Utils.normalRelativeAngle(absoluteBearing - bot.getGunHeadingRadians()));
+            }
+        }
+    }
 }
