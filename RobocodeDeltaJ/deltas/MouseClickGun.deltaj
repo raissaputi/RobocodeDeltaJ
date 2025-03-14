@@ -1,37 +1,36 @@
-delta MouseClickGun {
+delta MouseClickGun {    
 
-	modifies jab.module.Gun {
+    modifies jab.module.Gun {
 
-		adds import java.awt.event.MouseEvent;
-		adds import java.awt.event.MouseListener;
-		adds import robocode.Event;
-		adds import jab.module.Module;
+        adds import java.awt.event.MouseEvent;
+        adds import jab.module.Module;
+        adds import robocode.Bullet;
 
-		adds private boolean fireRequested;
+        modifies constructor(Module bot) {
+            this.bot = bot;
+        }
 
-		modifies constructor(Module bot) {
-			this.bot = bot;
-			fireRequested = false;
-		}
+        modifies fire() {
+            if (bot.bulletPower > 0 && bot.getGunHeat() == 0) {
+                Bullet b = bot.setFireBullet(bot.bulletPower);
+                bot.registerBullet(b);
+            }
+        }
+        
+        adds public void listenMouse(MouseEvent e) {
+            if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    bot.bulletPower = 3;
+                } else if (e.getButton() == MouseEvent.BUTTON2) {
+                    bot.bulletPower = 2;
+                } else {
+                    bot.bulletPower = 1;
+                }
+            }
 
-		adds public void listen(Event e) {
-			if (e instanceof MouseEvent) {
-				MouseEvent mouseEvent = (MouseEvent) e;
-				if (mouseEvent.getID() == MouseEvent.MOUSE_CLICKED) {
-					handleMouseClick(mouseEvent);
-				}
-			}
-		}
-
-		adds private void handleMouseClick(MouseEvent e) {
-			fireRequested = true;
-		}
-
-		modifies fire() {
-			if (fireRequested) {
-				bot.setFire(1); // Fire with power 1
-				fireRequested = false;
-			}
-		}
-	}
+            if (e.getID() == MouseEvent.MOUSE_RELEASED) {
+                bot.bulletPower = 0;
+            }
+        }
+    }
 }

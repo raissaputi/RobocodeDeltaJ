@@ -2,37 +2,39 @@ delta MouseTargeting {
 
 	modifies jab.module.Targeting {
 
+		adds import java.awt.Color;
+		adds import java.awt.Graphics2D;
+		adds import java.awt.event.InputEvent;
 		adds import java.awt.event.MouseEvent;
-		adds import java.awt.event.MouseListener;
-		adds import robocode.Event;
+		adds import robocode.util.Utils;
 		adds import jab.module.Module;
 
-		adds private double targetX, targetY;
+		adds private int aimX;
+		adds private int aimY;
 
 		modifies constructor(Module bot) {
 			this.bot = bot;
-			targetX = 0;
-			targetY = 0;
-		}
-
-		adds public void listen(Event e) {
-			if (e instanceof MouseEvent) {
-				MouseEvent mouseEvent = (MouseEvent) e;
-				if (mouseEvent.getID() == MouseEvent.MOUSE_MOVED) {
-					handleMouseMoved(mouseEvent);
-				}
-			}
-		}
-
-		adds private void handleMouseMoved(MouseEvent e) {
-			targetX = e.getX();
-			targetY = e.getY();
+			aimX = 0;
+			aimY = 0;
 		}
 
 		modifies target() {
-			double angleToTarget = Math.atan2(targetY - bot.getY(), targetX - bot.getX());
-			double turnGunAngle = robocode.util.Utils.normalRelativeAngle(angleToTarget - bot.getGunHeadingRadians());
-			bot.setTurnGunRightRadians(turnGunAngle);
+			double angle = Utils.normalAbsoluteAngle(Math.atan2(aimX - bot.getX(), aimY - bot.getY()));
+			bot.setTurnGunRightRadians(Utils.normalRelativeAngle(angle - bot.getGunHeadingRadians()));
+		}
+
+		adds public void listenInput(InputEvent e) {
+			if (e instanceof MouseEvent) {
+				aimX = ((MouseEvent) e).getX();
+				aimY = ((MouseEvent) e).getY();
+			}
+		}
+
+		adds public void onPaint(Graphics2D g) {
+			g.setColor(Color.RED);
+			g.drawOval(aimX - 15, aimY - 15, 30, 30);
+			g.drawLine(aimX, aimY - 4, aimX, aimY + 4);
+			g.drawLine(aimX - 4, aimY, aimX + 4, aimY);
 		}
 	}
 }

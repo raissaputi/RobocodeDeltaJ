@@ -5,14 +5,26 @@ delta ClosestSelectEnemy {
 		adds import robocode.ScannedRobotEvent;
 		adds import robocode.Event;
 		adds import jab.module.Module;
+		adds import java.util.Iterator;
+		adds import jab.module.BotInfo;
 
 		adds private double closestDistance;
 		adds private String closestEnemy;
+		adds private String target;
+
+		adds public void setTarget(String target) {
+			this.target = target;
+		}
+
+		adds public String getTarget() {
+			return target;
+		}
 
 		modifies constructor(Module bot) {
 			this.bot = bot;
 			closestDistance = Double.MAX_VALUE;
 			closestEnemy = null;
+			target = null;
 		}
 
 		adds public void listen(Event e) {
@@ -27,9 +39,17 @@ delta ClosestSelectEnemy {
 		}
 
 		modifies select() {
-			if (closestEnemy != null) {
-				bot.setTarget(closestEnemy);
+			Iterator<BotInfo> iterator = bot.botsInfo.values().iterator();
+			double minDistance = Double.MAX_VALUE;
+			BotInfo selected = null;
+			while (iterator.hasNext()) {
+				BotInfo botInfo = iterator.next();
+				if ((!botInfo.teammate) && minDistance > botInfo.distance) {
+					selected = botInfo;
+					minDistance = botInfo.distance;
+				}
 			}
+			bot.enemy = selected;
 		}
 	}
 }
