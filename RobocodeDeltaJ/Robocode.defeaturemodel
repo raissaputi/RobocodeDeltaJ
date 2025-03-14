@@ -41,6 +41,7 @@
           <features maxCardinality="1" name="MaximumPowerGun"/>
           <features maxCardinality="1" name="NoFireGun"/>
           <features maxCardinality="1" name="MouseClickGun"/>
+          <features maxCardinality="1" name="AutoRifleGun"/>
         </groups>
       </features>
     </groups>

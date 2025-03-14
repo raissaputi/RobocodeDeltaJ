@@ -46,5 +46,8 @@ NoFireGun:
 MouseClickGun:
 <decore/MouseClickGun.decore>
 
+AutoRifleGun:
+<decore/AutoRifleGun.decore>
+
 RandomMovement:
 <decore/RandomMovement.decore>
