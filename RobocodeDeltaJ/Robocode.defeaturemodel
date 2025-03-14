@@ -33,6 +33,7 @@
           <features maxCardinality="1" name="WeakestSelectEnemy"/>
           <features maxCardinality="1" name="StrongestSelectEnemy"/>
           <features maxCardinality="1" name="ClosestSelectEnemy"/>
+          <features maxCardinality="1" name="FarthestSelectEnemy"/>
         </groups>
       </features>
       <features minCardinality="1" maxCardinality="1" name="Gun">

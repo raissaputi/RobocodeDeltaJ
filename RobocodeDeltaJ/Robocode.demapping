@@ -34,6 +34,9 @@ StrongestSelectEnemy:
 ClosestSelectEnemy:
 <decore/ClosestSelectEnemy.decore>
 
+FarthestSelectEnemy:
+<decore/FarthestSelectEnemy.decore>
+
 MaximumPowerGun:
 <decore/MaximumPowerGun.decore>
 
