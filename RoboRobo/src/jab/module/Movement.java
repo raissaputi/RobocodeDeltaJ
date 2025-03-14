@@ -1,5 +1,9 @@
 package jab.module;
 
+import robocode.Event;
+import robocode.HitWallEvent;
+import jab.module.Module;
+
 /**
  * Movement
  * 
@@ -11,10 +15,22 @@ public class Movement extends Part {
 
 	public Movement(Module bot) {
 		this.bot = bot;
+		turnRightValue = 45;
 	}
 
 	public void move() {
-		bot.setAhead(0.0001);
+		// Limit our speed to 5
+		bot.setMaxVelocity(8);
+		// Start moving (and turning)
+		bot.setAhead(10000);
+	}
+
+	private int turnRightValue;
+
+	public void listen(Event e) {
+		if (e instanceof HitWallEvent) {
+			bot.setTurnRight(turnRightValue);
+		}
 	}
 
 }
