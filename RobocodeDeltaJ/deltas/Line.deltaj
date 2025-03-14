@@ -1,2 +1,31 @@
-delta Line {
+delta Line {	
+
+	modifies jab.module.Movement {
+	
+		adds import robocode.Event;
+		adds import robocode.HitWallEvent;
+		adds import jab.module.Module;
+	
+		adds private int moveDirection;
+		
+		modifies constructor(Module bot) {
+			this.bot = bot;
+			moveDirection = 1;
+		}
+	
+		modifies move() {
+			// Limit our speed to 5
+			bot.setMaxVelocity(8);
+			// Start moving in the current direction
+			bot.setAhead(10000 * moveDirection);
+		}
+		
+		adds public void listen(Event e) {
+			if (e instanceof HitWallEvent) {
+				moveDirection *= -1; // Reverse direction when hitting a wall
+			}
+		}
+		
+	}
+
 }

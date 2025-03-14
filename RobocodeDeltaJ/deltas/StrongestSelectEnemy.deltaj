@@ -1,2 +1,31 @@
-delta StrongestSelectEnemy {
+delta StrongestSelectEnemy {	
+
+	modifies jab.module.SelectEnemy {
+	
+		adds import java.util.Iterator;
+		adds import jab.module.BotInfo;
+		adds import jab.module.Module;
+	
+		modifies constructor(Module bot) {
+			this.bot = bot;
+		}
+	
+		modifies select() {
+			Iterator<BotInfo> iterator = bot.botsInfo.values().iterator();
+			double maxEnergy = Double.MIN_VALUE;
+			BotInfo selected = null;
+
+			while (iterator.hasNext()) {
+				BotInfo e = iterator.next();
+				if (maxEnergy < e.energy) {
+					selected = e;
+					maxEnergy = e.energy;
+				}				
+			}
+
+			bot.enemy = selected;
+		}
+		
+	}
+
 }

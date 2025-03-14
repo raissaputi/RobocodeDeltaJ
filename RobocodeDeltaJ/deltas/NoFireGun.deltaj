@@ -1,2 +1,17 @@
-delta NoFireGun {
+delta NoFireGun {	
+
+	modifies jab.module.Gun {
+	
+		adds import jab.module.Module;
+	
+		modifies constructor(Module bot) {
+			this.bot = bot;
+		}
+	
+		modifies fire() {
+			bot.bulletPower = 0; // Tidak menembak
+		}
+		
+	}
+
 }
